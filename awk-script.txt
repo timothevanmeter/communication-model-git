@@ -1,0 +1,14 @@
+# AWK SCRIPTS for simplifying NetLogo BehaviourSpace horrible files
+
+# Only keeps the lines after line 6:
+awk 'NR>=7' your-file.csv > new-file.csv
+
+# Removes all the double quotes charavter " from the file
+awk 'gsub("\"","")' your-file.csv > new-file.csv
+
+# Replaces the commas by spaces to specify columns (default in gnuplot)
+awk 'gsub(","," ")' your-file.csv > new-file.csv
+
+# ALL TOGETHER!
+awk 'NR>=7' your-file.csv | awk 'gsub(","," ")' | awk 'gsub("\"","")' > new-file.csv
+

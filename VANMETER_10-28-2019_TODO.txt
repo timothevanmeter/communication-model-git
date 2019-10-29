@@ -1,0 +1,27 @@
+TO DO File
+
+******************************
+
+Tasks to do:
+
+001 - Create the setup and go procedures in the model with the name of the major procedures.
+002 - Implement the alphabet for the individuals, its generation and subsequent modification, through mutation.
+003 - Calculate the similarity ratio from the comparison of the two alphabets.
+004 - Keep track of reproducing and non-reproducing individuals during each time step.
+005 - Make all the procedures relating to alphabet and message length as general as possible: to allow any size of alphabet or message length to be selected by the user.
+006 - Keep track of the type of individuals in the simulation: their 'alphabet identity'.
+007 - Keep track of the number of possible types of individuals.
+
+008 - Make a quick literature survey to explain the context for this type of model and the questions related to them.
+009 - Obtain a general procedure to list all types of alphabets in the simulation and track their proportion through time.
+010 - Automatize the workflow by using a awk script in combination with gnuplot to have all BehaviorSpace outputs directly plotted.
+
+******************************
+
+DONE (10-28-2019)
+
+001 ; 002 ; 003 ; 004 ; 004 ; 005 ; 007
+
+REMAINING (10-28-2019)
+
+006 ; 008 ; 009 ; 010
