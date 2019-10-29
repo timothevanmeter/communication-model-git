@@ -1,57 +1,105 @@
 globals [ai]
 
+patches-own [
+  d  ;; deficit for all the edges already counted for other patches
+  state?
+]
+
 to setup
   clear-all
-  new-agents 100
+  ask patches [
+    set d 0 ;;;; IMPORTANT to set to 0 to avoid nay errors in estimation of ai
+    set state? false
+;    if random-float 101 >= 90 [
+;      set-on
+;    ]
+  ]
+;  ask patches with [state?] [set pcolor red]
   reset-ticks
 end
 
-to new-agents [ number ]
-  create-turtles number [
-    setxy random-xcor random-ycor
-  ]
+to set-on
+  set state? true
 end
 
+to patch-draw
+  if mouse-down?     ;; reports true or false to indicate whether mouse button is down
+    [
+      ;; mouse-xcor and mouse-ycor report the position of the mouse --
+      ;; note that they report the precise position of the mouse,
+      ;; so you might get a decimal number like 12.3, but "patch"
+      ;; automatically rounds to the nearest patch
+      ask patch mouse-xcor mouse-ycor
+        [ set pcolor red
+          set state? true
+          display ]
+    ]
+end
+
+
 to go
-  move-agents
   aggregation-index
-;  print (remainder (sqrt 4.5) 1)
   tick
 end
 
-to move-agents
-  ask turtles [
-    rt random 361
-    forward 1
-  ]
-end
 
 to aggregation-index
-  let total count turtles
+  let total count patches with [state?]
+  print (word "total red patches = " total)
+  print (word "******************************")
   let g 0
-  ask patches [
-    set g g + count neighbors4 with [turtles-here != nobody]
+;    The edges are counted multiple times
+;    Need to track how the count is obtained
+  ask patches with [state?] [
+    set g (g + count neighbors4 with [state?] - d)
+    ask neighbors4 with [state?] [set d (d + 1)]
+;    print (word "******************************")
+;    print self
+;    print (word "neighbors4 = " count neighbors4 with [state?])
+;    print (word "d = " (- d))
+;    print (word "neighbors4 - d = " (count neighbors4 with [state?] - d))
   ]
-  set ai ((g / max_g total) * 100)
+  let maxl (max_g total)
+  set ai ((g / maxl) * 100)
+  print (word "g = " g)
+  print (word "AI = " ai)
 end
+
 
 to-report max_g [tot]
   let n 0
   let maxg 0
-  foreach (range tot) [
-    ? ->
-    if (remainder (sqrt (tot - ?)) 1) = 0 [
-      set n (remainder (sqrt (tot - ?)) 1)
+  print (word "******************************")
+  print (word "******************************")
+
+  let listi (range tot)
+  foreach listi [
+    [i] ->
+    print (word "iteration #" i)
+    if (remainder sqrt(tot - i) 1) = 0 [
+      print (word "iteration " i " successful!!")
+      set n (sqrt (tot - i))
+      print (word "tot = " tot)
+      print (word "tot - iteration = " (tot - i))
+      print (word "sqrt (tot - iteration) = " sqrt (tot - i) )
+      print (word "sqrt (tot - iteration) modulo 1 = " (remainder sqrt (tot - i) 1) )
+      print (word "n = " n)
     ]
+
     let m (tot - n ^ 2)
+    print (word "tot - n^2 = " m)
     (ifelse
-      m = 0 [set maxg 2 * n * (n - 1)]
-      m <= n [set maxg 2 * n * (n - 1) + 2 * m - 1]
-      m > n [set maxg 2 * n * (n - 1) + 2 * m - 2]
+      m = 0 [set maxg (2 * n * (n - 1)) ]
+      m <= n [set maxg (2 * n * (n - 1) + 2 * m - 1) ]
+      m > n [set maxg (2 * n * (n - 1) + 2 * m - 2) ]
     )
+    print (word "max = " maxg)
     report maxg
   ]
 end
+
+
+
 @#$#@#$#@
 GRAPHICS-WINDOW
 210
@@ -67,8 +115,8 @@ GRAPHICS-WINDOW
 1
 1
 0
-1
-1
+0
+0
 1
 -16
 16
@@ -104,7 +152,7 @@ BUTTON
 132
 NIL
 go\n
-T
+NIL
 1
 T
 OBSERVER
@@ -131,6 +179,23 @@ false
 "" ""
 PENS
 "default" 1.0 0 -16777216 true "" "plot ai"
+
+BUTTON
+50
+177
+145
+210
+NIL
+patch-draw
+T
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -474,7 +539,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.1.1
+NetLogo 6.1.0
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
