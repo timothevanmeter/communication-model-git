@@ -1,1 +1,1 @@
-# communication-model
+# Communication Model
