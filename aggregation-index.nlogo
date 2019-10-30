@@ -22,22 +22,9 @@ to set-on
   set state? true
 end
 
-to patch-draw
-  if mouse-down?     ;; reports true or false to indicate whether mouse button is down
-    [
-      ;; mouse-xcor and mouse-ycor report the position of the mouse --
-      ;; note that they report the precise position of the mouse,
-      ;; so you might get a decimal number like 12.3, but "patch"
-      ;; automatically rounds to the nearest patch
-      ask patch mouse-xcor mouse-ycor
-        [ set pcolor red
-          set state? true
-          display ]
-    ]
-end
-
 
 to go
+  reset
   aggregation-index
   tick
 end
@@ -45,8 +32,9 @@ end
 
 to aggregation-index
   let total count patches with [state?]
+  if total = 0 [ stop ]
+  print "******************************"
   print (word "total red patches = " total)
-  print (word "******************************")
   let g 0
 ;    The edges are counted multiple times
 ;    Need to track how the count is obtained
@@ -59,47 +47,65 @@ to aggregation-index
 ;    print (word "d = " (- d))
 ;    print (word "neighbors4 - d = " (count neighbors4 with [state?] - d))
   ]
-  let maxl (max_g total)
-  set ai ((g / maxl) * 100)
+;  let maxl (max_g total)
+  print (word "max g = " max_g total)
+  set ai ((g / max_g total) * 100)
   print (word "g = " g)
-  print (word "AI = " ai)
+  print (word "AI = (g/max_g)*100 = " precision ai 1)
+  print "******************************"
 end
 
 
 to-report max_g [tot]
   let n 0
   let maxg 0
-  print (word "******************************")
-  print (word "******************************")
+;  print "******************************"
+;  print "******************************"
+  let i 0
+  while [ (remainder sqrt(tot - i) 1) != 0 ] [
+;    print (word "iteration " i " successful!!")
+;    print (word "tot = " tot)
+;    print (word "tot - iteration = " (tot - i))
+;    print (word "sqrt (tot - iteration) = " sqrt (tot - i) )
+;    print (word "sqrt (tot - iteration) modulo 1 = " (remainder sqrt (tot - i) 1) )
 
-  let listi (range tot)
-  foreach listi [
-    [i] ->
-    print (word "iteration #" i)
-    if (remainder sqrt(tot - i) 1) = 0 [
-      print (word "iteration " i " successful!!")
-      set n (sqrt (tot - i))
-      print (word "tot = " tot)
-      print (word "tot - iteration = " (tot - i))
-      print (word "sqrt (tot - iteration) = " sqrt (tot - i) )
-      print (word "sqrt (tot - iteration) modulo 1 = " (remainder sqrt (tot - i) 1) )
-      print (word "n = " n)
-    ]
-
-    let m (tot - n ^ 2)
-    print (word "tot - n^2 = " m)
-    (ifelse
-      m = 0 [set maxg (2 * n * (n - 1)) ]
-      m <= n [set maxg (2 * n * (n - 1) + 2 * m - 1) ]
-      m > n [set maxg (2 * n * (n - 1) + 2 * m - 2) ]
-    )
-    print (word "max = " maxg)
-    report maxg
+    set i (i + 1)
   ]
+  set n (sqrt (tot - i))
+;  print (word "n = " n)
+  let m (tot - n ^ 2)
+;  print (word "tot - n^2 = " m)
+  (ifelse
+    m = 0 [set maxg (2 * n * (n - 1)) ]
+    m <= n [set maxg (2 * n * (n - 1) + 2 * m - 1) ]
+    m > n [set maxg (2 * n * (n - 1) + 2 * m - 2) ]
+  )
+;  print (word "max = " maxg)
+  report maxg
 end
 
 
+;#######################################################################################
 
+to reset                       ;;;; RESETS VARIABLES
+  ask patches [ set d 0 ]
+  set ai 0
+end
+
+
+to patch-draw        ;;;; ENABLES USER DEFINED PATTERNS OF PATCHES
+  if mouse-down?     ;; reports true or false to indicate whether mouse button is down
+    [
+      ;; mouse-xcor and mouse-ycor report the position of the mouse --
+      ;; note that they report the precise position of the mouse,
+      ;; so you might get a decimal number like 12.3, but "patch"
+      ;; automatically rounds to the nearest patch
+      ask patch mouse-xcor mouse-ycor
+        [ set pcolor red
+          set state? true
+          display ]
+    ]
+end
 @#$#@#$#@
 GRAPHICS-WINDOW
 210
@@ -167,13 +173,13 @@ PLOT
 63
 980
 401
-plot 1
+Aggregation Index
 time
 Aggregation Index
 0.0
 10.0
 0.0
-10.0
+100.0
 true
 false
 "" ""
@@ -539,7 +545,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.1.0
+NetLogo 6.1.1
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
