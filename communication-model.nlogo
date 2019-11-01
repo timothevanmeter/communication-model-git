@@ -3,7 +3,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;; LAST UPDATED: 10-27-2019
+;;;; LAST UPDATED: 10-31-2019
 ;;;; Timothe Van Meter
 ;;;; tvanme2@uic.edu
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -13,26 +13,28 @@ globals [
   total-turtles
   null
   similarity-ratio
-  type1
-  type2
-  type3
-  type4
+  alphabets     ;; A list of all the possible alphabet types in the current simulation scenario
 ]
 turtles-own [
   alphabet
   communicated? ;; keep track of agents that were already involved in a communication event
   interlocutor  ;; the agent with whom you are talking this time step
   reproduce?    ;; keep track of agents that are to reproduce this time step
+  alphabet-type ;; keep track of the type of alphabet an agent is using
 ]
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 to setup
   clear-all
   set null 0
+  show-details
+  set alphabets permutations (range alphabet-size)
   new-agents initial-population false null
-  combinations
-  print permutations (range alphabet-size)
   reset-ticks
+end
+
+to show-details
+  if details [combinations]
 end
 
 to new-agents [ number inherited? inheritance ]
@@ -43,6 +45,15 @@ to new-agents [ number inherited? inheritance ]
     ][create-alphabet]
     set communicated? false
     set reproduce? false
+
+;    foreach (range (factorial alphabet-size)) [
+;      [i] ->
+;      if alphabet = (item i alphabets) [
+;        set alphabet-type i
+;;        set color i
+;        set color scale-color red i 0 factorial alphabet-size
+;      ]
+;    ]
     (ifelse
       alphabet = (list 0 1) [set color gray]
       alphabet = (list 1 0) [set color orange]
@@ -57,6 +68,7 @@ to create-alphabet
   set alphabet shuffle alphabet
   ;print alphabet
 end
+
 
 to go
   move-agents
@@ -157,10 +169,30 @@ to death
   ]
 end
 
+;##############################################################
+
 to monitor-turtles
   set total-turtles count turtles
-  set type1 count turtles with [alphabet = (list 0 1)]
-  set type2 count turtles with [alphabet = (list 1 0)]
+
+;  ask turtles [
+;    foreach (range (factorial alphabet-size)) [
+;      [i] ->
+;      create-temporary-plot-pen (word "alpahbet " i)
+;      set alphabet-type i
+;      set color scale-color red i 0 factorial alphabet-size
+;      set-plot-pen-color color
+;      plot count turtles with [alphabet-type = i]
+;    ]
+;  ]
+
+;  foreach (range (factorial alphabet-size)) [
+;    [i] ->
+;    print (word "type " i " = " item i alphabets)
+;    print (word "#Turtles of type " i " = " count turtles with [alphabet = (item i alphabets)])
+
+;    PRINT TO FILE THE SIMULATION DYNAMICS: LATER PLOT THROUGH GNUPLOT !!!
+
+;  ]
 end
 
 to reset-boolean
@@ -191,8 +223,8 @@ end
 to combinations
   let combinations-total (factorial alphabet-size)
   print (word "The total number of combinations for this alphabet size is: "combinations-total ", The details: ")
+  print permutations (range alphabet-size)
 end
-
 
 to-report factorial [num]
   let i range num
@@ -256,7 +288,7 @@ lambda
 lambda
 0
 1
-0.01
+0.0
 0.01
 1
 NIL
@@ -288,7 +320,7 @@ initial-population
 initial-population
 0
 1000
-200.0
+20.0
 10
 1
 NIL
@@ -303,7 +335,7 @@ alphabet-size
 alphabet-size
 0
 100
-4.0
+2.0
 1
 1
 NIL
@@ -321,25 +353,25 @@ total-turtles
 10
 
 SLIDER
-32
-198
-205
-231
+30
+191
+203
+224
 message-length
 message-length
 0
 100
-40.0
+10.0
 1
 1
 NIL
 HORIZONTAL
 
 SLIDER
-27
-245
-215
-278
+24
+230
+212
+263
 agents-per-reproduction
 agents-per-reproduction
 0
@@ -355,7 +387,7 @@ PLOT
 87
 1129
 366
-plot 1
+plot
 NIL
 NIL
 0.0
@@ -363,24 +395,15 @@ NIL
 0.0
 10.0
 true
-false
+true
 "" ""
 PENS
-"pen-1" 1.0 0 -955883 true "" "plot type1"
-"pen-2" 1.0 0 -7500403 true "" "plot type2"
-"pen-4" 1.0 0 -6459832 true "" "plot type4"
-"pen-5" 1.0 0 -1184463 true "" "plot type5"
-"pen-6" 1.0 0 -10899396 true "" "plot type6"
-"pen-7" 1.0 0 -13840069 true "" "plot type7"
-"pen-8" 1.0 0 -14835848 true "" "plot type8"
-"pen-9" 1.0 0 -11221820 true "" "plot type9"
-"pen-10" 1.0 0 -13791810 true "" "plot type10"
 
 SLIDER
-32
+30
+271
+202
 304
-204
-337
 mutation-rate
 mutation-rate
 0
@@ -390,6 +413,17 @@ mutation-rate
 1
 NIL
 HORIZONTAL
+
+SWITCH
+55
+313
+160
+346
+details
+details
+1
+1
+-1000
 
 @#$#@#$#@
 ## WHAT IS IT?
