@@ -14,6 +14,7 @@ globals [
   null
   similarity-ratio
   alphabets     ;; A list of all the possible alphabet types in the current simulation scenario
+  outputname    ;; Output file's name
 ]
 turtles-own [
   alphabet
@@ -46,18 +47,12 @@ to new-agents [ number inherited? inheritance ]
     set communicated? false
     set reproduce? false
 
-;    foreach (range (factorial alphabet-size)) [
-;      [i] ->
-;      if alphabet = (item i alphabets) [
-;        set alphabet-type i
-;;        set color i
-;        set color scale-color red i 0 factorial alphabet-size
-;      ]
-;    ]
-    (ifelse
-      alphabet = (list 0 1) [set color gray]
-      alphabet = (list 1 0) [set color orange]
-    )
+    foreach (range (factorial alphabet-size)) [
+      [i] ->
+      if alphabet = (item i alphabets) [
+        set alphabet-type i
+      ]
+    ]
   ]
 end
 
@@ -71,6 +66,10 @@ end
 
 
 to go
+  if not any? turtles [
+;    save-output
+    stop
+  ]
   move-agents
   ;;;;;;
   ;; This assess the status of the agents and assign them a commnuication queue
@@ -174,26 +173,44 @@ end
 to monitor-turtles
   set total-turtles count turtles
 
-;  ask turtles [
-;    foreach (range (factorial alphabet-size)) [
-;      [i] ->
-;      create-temporary-plot-pen (word "alpahbet " i)
-;      set alphabet-type i
-;      set color scale-color red i 0 factorial alphabet-size
-;      set-plot-pen-color color
-;      plot count turtles with [alphabet-type = i]
-;    ]
-;  ]
-
-;  foreach (range (factorial alphabet-size)) [
-;    [i] ->
-;    print (word "type " i " = " item i alphabets)
-;    print (word "#Turtles of type " i " = " count turtles with [alphabet = (item i alphabets)])
-
-;    PRINT TO FILE THE SIMULATION DYNAMICS: LATER PLOT THROUGH GNUPLOT !!!
-
-;  ]
+  ask turtles [
+    foreach (range (factorial alphabet-size)) [
+      [i] ->
+      create-temporary-plot-pen (word "alpahbet " i)
+      set alphabet-type i
+      set color scale-color red i 0 factorial alphabet-size
+      set-plot-pen-color color
+      plot count turtles with [alphabet-type = i]
+    ]
+  ]
 end
+
+to save-output
+  set-current-directory "/home/timothe/communication-project/communication-model-git/"
+  file-open (word "output-base-model-A2.txt")
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;;; Write the header of the file
+;  file-write "#"
+  if behaviorspace-run-number = 1 [
+    file-type "# "
+    foreach (range (factorial alphabet-size)) [
+      [i] ->
+      file-type item i alphabets
+      file-type ","
+    ]
+    file-print "" ;; Jumps a line
+  ]
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;;; Writing data counts to the file
+  foreach (range (factorial alphabet-size)) [
+    [i] ->
+    file-type (count turtles with [alphabet-type = i])
+    file-type ","
+  ]
+    file-print "" ;; Jumps a line
+  file-close
+end
+
 
 to reset-boolean
   ask turtles [
@@ -288,7 +305,7 @@ lambda
 lambda
 0
 1
-0.0
+0.01
 0.01
 1
 NIL
@@ -320,7 +337,7 @@ initial-population
 initial-population
 0
 1000
-20.0
+200.0
 10
 1
 NIL
@@ -334,7 +351,7 @@ SLIDER
 alphabet-size
 alphabet-size
 0
-100
+10
 2.0
 1
 1
@@ -361,7 +378,7 @@ message-length
 message-length
 0
 100
-10.0
+1.0
 1
 1
 NIL
@@ -376,7 +393,7 @@ agents-per-reproduction
 agents-per-reproduction
 0
 50
-4.0
+2.0
 1
 1
 NIL
@@ -408,7 +425,7 @@ mutation-rate
 mutation-rate
 0
 100
-0.0
+50.0
 1
 1
 NIL
@@ -771,6 +788,44 @@ NetLogo 6.1.1
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
+<experiments>
+  <experiment name="base-model-A2" repetitions="10" runMetricsEveryStep="true">
+    <setup>setup</setup>
+    <go>go</go>
+    <final>save-output</final>
+    <timeLimit steps="500"/>
+    <enumeratedValueSet variable="message-length">
+      <value value="1"/>
+      <value value="10"/>
+      <value value="50"/>
+      <value value="100"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="lambda">
+      <value value="0.01"/>
+      <value value="0.05"/>
+      <value value="0.08"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="details">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="alphabet-size">
+      <value value="2"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="agents-per-reproduction">
+      <value value="2"/>
+      <value value="5"/>
+      <value value="10"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="mutation-rate">
+      <value value="10"/>
+      <value value="50"/>
+      <value value="80"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="initial-population">
+      <value value="200"/>
+    </enumeratedValueSet>
+  </experiment>
+</experiments>
 @#$#@#$#@
 @#$#@#$#@
 default
