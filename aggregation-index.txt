@@ -1,0 +1,76 @@
+;##############################################################
+;;;; AGRREGATION MEASURE
+;##############################################################
+;; Think about passing the criteria for measuring aggregation index
+;; through the arguments for the function
+
+to aggregation-index
+  let total count turtles with [alphabet-type = 1]
+  if total = 0 [ stop ]
+  print "******************************"
+  print (word "total agents with [1 0] = " total)
+  let g 0
+  ask turtles with [alphabet-type = 1] [
+;    set k 0             ;; Reset the variable
+    alphabet-neighbors    ;; Call the procedure for the current agent to count its neighbors with similar alph
+    set g (g + k - d)		  ;; Counting all borders shared with same alphabet neighbors
+;    ask patch-here [
+;      ask neighbors4 [
+;        ask turtles-here with [alphabet-type = 1] [set d (d + 1)]
+;      ]
+;    ]
+    ;ask neighbors4 with [alphabet-type = 1] [set d (d + 1)]				;; minus, d, the borders already counted in previous iterations
+;    print (word "******************************")
+;    print self
+;    print (word "neighbors4 = " count neighbors4 with [state?])
+;    print (word "d = " (- d))
+;    print (word "neighbors4 - d = " (count neighbors4 with [state?] - d))
+  ]
+;  let maxl (max_g total)							;; Calling the reporter max_g with number of total red patches
+  print (word "max g = " max_g total)
+  set ai ((g / max_g total) * 100)
+  print (word "g = " g)
+  print (word "AI = (g/max_g)*100 = " precision ai 1)
+  print "******************************"
+end
+
+to alphabet-neighbors
+  set k 0             ;; Reset the variable
+  ask patch-here [
+    ask neighbors4 [
+      set k k + count turtles-here with [alphabet-type  = 1]
+      ask turtles-here with [alphabet-type = 1] [set d (d + 1)]
+    ]
+  ]
+  print (word "# Neighbors = " k)
+end
+
+
+;; This reporter sends as a result the size of the most compact shape, a square,
+;; for the number of units or patches here considered
+to-report max_g [tot]
+  let n 0
+  let maxg 0
+;  print "******************************"
+;  print "******************************"
+  let i 0
+  while [ (remainder sqrt(tot - i) 1) != 0 ] [		;; this iteration finds the size of the corresponding square
+;    print (word "iteration " i " successful!!")
+;    print (word "tot = " tot)
+;    print (word "tot - iteration = " (tot - i))
+;    print (word "sqrt (tot - iteration) = " sqrt (tot - i) )
+;    print (word "sqrt (tot - iteration) modulo 1 = " (remainder sqrt (tot - i) 1) )
+    set i (i + 1)
+  ]
+  set n (sqrt (tot - i))
+;  print (word "n = " n)
+  let m (tot - n ^ 2)
+;  print (word "tot - n^2 = " m)
+  (ifelse
+    m = 0 [set maxg (2 * n * (n - 1)) ]
+    m <= n [set maxg (2 * n * (n - 1) + 2 * m - 1) ]
+    m > n [set maxg (2 * n * (n - 1) + 2 * m - 2) ]
+  )
+;  print (word "max = " maxg)
+  report maxg
+end

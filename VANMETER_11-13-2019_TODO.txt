@@ -11,10 +11,19 @@ Tasks to do:
 005 - Make all the procedures relating to alphabet and message length as general as possible: to allow any size of alphabet or message length to be selected by the user.
 006 - Keep track of the type of individuals in the simulation: their 'alphabet identity'.
 007 - Keep track of the number of possible types of individuals.
-
 008 - Make a quick literature survey to explain the context for this type of model and the questions related to them.
 009 - Obtain a general procedure to list all types of alphabets in the simulation and track their proportion through time.
 010 - Automatize the workflow by using a awk script in combination with gnuplot to have all BehaviorSpace outputs directly plotted.
+011 - Run simulations for an alphabet of size 4
+012 - Implement new initialisations scenarios (potentially enabling aggregation)
+013 - Integrate the aggregation index measure for agents in the main model
+
+014 - Calculate temporal cross-correlation between individual's aggregation and population's size
+015 - Do a regression model, using numerous simulations with changes in all parameters
+016 - Run simulations to build a phase space for parameters of interest: parameters significant in the regression model
+017 - Track individual agents to have a more detailed mechanistic understanding of the model's results
+018 - Prove analytically that there is a convergence for the measure of similarity for any alphabet size
+
 
 ******************************
 
@@ -25,3 +34,37 @@ DONE (10-28-2019)
 REMAINING (10-28-2019)
 
 006 ; 008 ; 009 ; 010
+
+******************************
+
+DONE (11-04-2019)
+
+006 ; 009 ; 010
+
+REMAINING (11-04-2019)
+
+008 ; 011 ; 012
+
+******************************
+
+DONE (11-11-2019)
+
+013 ; 008
+
+REMAINING (11-11-2019)
+
+011 ; 012
+
+******************************
+
+DONE (11-13-2019)
+
+
+
+REMAINING (11-13-2019)
+
+011 ; 012 ; 014 ; 015 ; 016 ; 017 ; 018
+
+******************************
+
+

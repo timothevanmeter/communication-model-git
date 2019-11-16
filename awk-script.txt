@@ -9,6 +9,11 @@ awk 'gsub("\"","")' your-file.csv > new-file.csv
 # Replaces the commas by spaces to specify columns (default in gnuplot)
 awk 'gsub(","," ")' your-file.csv > new-file.csv
 
+
+# Only keep the specified columns in the file
+awk '{print $2}'
+
+
 # ALL TOGETHER!
 awk 'NR>=7' your-file.csv | awk 'gsub(","," ")' | awk 'gsub("\"","")' > new-file.csv
 

@@ -3,7 +3,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;; LAST UPDATED: 10-31-2019
+;;;; LAST UPDATED: 11-11-2019
 ;;;; Timothe Van Meter
 ;;;; tvanme2@uic.edu
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -12,62 +12,74 @@
 globals [
   total-turtles
   null
-  similarity-ratio
+  similarity-ratio ;; A measure of the similarity between two individual's alphabets
   alphabets     ;; A list of all the possible alphabet types in the current simulation scenario
   outputname    ;; Output file's name
+  ;; ai is not a global variable anymore
+;  ai            ;; Aggregation Index
+  k             ;; Tracks the number of neighbors with similar alphabets
 ]
 turtles-own [
-  alphabet
-  communicated? ;; keep track of agents that were already involved in a communication event
+  alphabet      ;; the variable storing the alphabet of the individual
+  communicated? ;; keeps track of agents that were already involved in a communication event
   interlocutor  ;; the agent with whom you are talking this time step
-  reproduce?    ;; keep track of agents that are to reproduce this time step
-  alphabet-type ;; keep track of the type of alphabet an agent is using
+  reproduce?    ;; keeps track of agents that are to reproduce this time step
+  alphabet-type ;; keeps track of the type of alphabet an agent is using
+  d             ;; keeps track of agents already counted for the aggregation index
 ]
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 to setup
   clear-all
   set null 0
-  show-details
+  show-details                                           ;; Shows all the possible alphabets for a given alphabet size
   set alphabets permutations (range alphabet-size)
-  new-agents initial-population false null
+  new-agents initial-population false null               ;; Creates the number of agents given by the user
   reset-ticks
 end
 
 to show-details
-  if details [combinations]
+  if details [combinations]           ;; if the boolean, set by user is true call the combinations procedure (line ~252)
 end
 
+
+;; The new-agents procedure is called with three arguments:
+;;  number      : the number of agents to create
+;;  inherited?  : if the agent is created from initialisation of from a reproduction event
+;;  inheritance : the alphabet the agent has inherited fromone of his parents
 to new-agents [ number inherited? inheritance ]
   create-turtles number [
-    setxy random-xcor random-ycor
-    ifelse inherited? [
-      set alphabet inheritance
-    ][create-alphabet]
-    set communicated? false
-    set reproduce? false
+    setxy random-xcor random-ycor               ;; random position for the new agent
+    set d 0                                     ;; Makes sure that d is initialised to 0
+    ifelse inherited? [                         ;; if the agent is created by a reproductive event
+      set alphabet inheritance                  ;; then use the parent's alphabet
+    ][create-alphabet]                          ;; Calls the create-alphabet procedure (line ~64)
+    set communicated? false			;; Makes sure the new agent does not communicate if it does not meet the conditions
+    set reproduce? false			;; Makes sure the new agent does not reproduce if it does not meet the conditions
 
-    foreach (range (factorial alphabet-size)) [
+    foreach (range (factorial alphabet-size)) [ ;; For all possible alphabets we compare the alphabet of the new agent created
       [i] ->
-      if alphabet = (item i alphabets) [
+      if alphabet = (item i alphabets) [	;; and assign the agent to a category depending on the identity of their alphabet
         set alphabet-type i
       ]
     ]
   ]
 end
 
+;; Alphabet generating procedure
+;; The alphabet is simplified here so that an individual simply has a list of numbers, always from 0 to the alphabet-size value
+;; set by the user. The alphabets are made different in the order of the numbers in that list.
+;; [0 1] is different than [1 0] in our conception of an alphabet
 to create-alphabet
-;  let alphabet-total (list "A" "B" "C" "D" "E" "F" "G" "H" "I" "J" "K" "L" "M" "N" "O" "P" "Q" "R" "S" "T" "U" "V" "W" "X" "Y" "Z")
-;  set alphabet (sublist alphabet-total 0 alphabet-size)
-  set alphabet (range alphabet-size)
-  set alphabet shuffle alphabet
+  set alphabet (range alphabet-size)        ;; list all value between 0 and the value of the alphabet-size variable
+  set alphabet shuffle alphabet            ;; randomized the order of the numbers in the list
   ;print alphabet
 end
 
 
 to go
-  if not any? turtles [
-;    save-output
+  if not any? turtles or ticks = time-limit [
+;    if save [save-output]
     stop
   ]
   move-agents
@@ -75,27 +87,38 @@ to go
   ;; This assess the status of the agents and assign them a commnuication queue
   ;; if they have the possibility to communicate this time step
   ;;;;;;
-  ask turtles with [count turtles-here >= 2] [
+  ask turtles with [count turtles-here >= 2] [                    ;; only turtles with other turtles on the same patch can communicate
+    ;; We set a designed locutor to be any of the turtles on the pacth that is not the caller
     let locutor (one-of turtles-here with [myself != self and not communicated?])
     if locutor != nobody [
       ask locutor [
-        set communicated? true
-        set interlocutor myself
+        set communicated? true            ;; Add this turtle to the queue for communication
+        set interlocutor myself           ;; Set this turtle as the interlocutor so it does not initiate any communication event on its own
       ]
-      set communicated? true
-      set interlocutor locutor
+      set communicated? true              ;; Add this turtle to the queue for communication
+      set interlocutor locutor            ;; Set the latter turtle as the interlocutor so the caller directs the communication event towards
+                                          ;; the proper turtle
     ]
   ]
   ;;;;;;
-  communication
-  reproduction
-  death
-  monitor-turtles
-  reset-boolean
+  communication           ;; Call the communication procedure (line ~116) to resolve all communication events
+  reproduction            ;; Call the reproduction procedure (line ~143) for successful communciation events
+  death                   ;; Call the death procedure (line ~175), apply background mortality rate
+  monitor-turtles         ;; Call the monitor-turtles procedure (line ~183), track the type of alphabets being used by turtles
+;  foreach (range (factorial alphabet-size)) [   ;;  For all possible alphabets we compare the alphabet of the new agent created
+;    [i] ->
+;    print (word "MEASURE FOR ALPHABET " item i alphabets " : ")
+;    aggregation-index i      ;; Call the aggregation-index procedure (line ~292), measure aggregation of individuals on the grid
+;  ]
+  reset-boolean           ;; Call the reset-boolean procedure (line ~232), which resets the boolean that tracks the queue for
+                          ;; individual's communication and reproduction
+  if save [
+    ifelse ticks = 0 [ save-output true ] [ save-output false ] ;;;; call save-output with or without the initialisation command
+  ]
   tick
 end
 
-
+;; Move agents procedure
 to move-agents
   ask turtles [
     rt random 361
@@ -103,29 +126,30 @@ to move-agents
   ]
 end
 
+
 to communication ;[interlocutor]
-  ask turtles with [communicated?] [
+  ask turtles with [communicated?] [                            ;; Only proceeds for turtles that have been allowed to communicate
     ; print "INTERACTION"
     let sim 0
     set similarity-ratio 0
 ;    print (word " item chosen = " random alphabet-size)
 
     ;###########
-    let listi (range message-length)
-    foreach listi [
+    let listi (range message-length)                           ;; We evaluate as many positions in both speaker's alphabets as the value of
+    foreach listi [                                            ;; the message-length variable
       ;    [i] -> type (word "#" i)
       ;    print (word ": " item i alphabet " VS " item i [alphabet] of interlocutor)
       [i] ->
-      let j random alphabet-size
-      if (item j alphabet) = (item j [alphabet] of interlocutor) [
-        set sim (sim + 1)
+      let j random alphabet-size                                        ;; We select randomly a position in the locutor's alphabet
+      if (item j alphabet) = (item j [alphabet] of interlocutor) [      ;; and compare it to the same position in the interlocutor's alphabet
+        set sim (sim + 1)                                               ;; For each position with identical number we increase the sim variable
       ]
     ]
-    if sim != 0 [set similarity-ratio (sim / message-length)]
-    ;  print (word "Similarity Ratio = " similarity-ratio)
+    if sim != 0 [set similarity-ratio (sim / message-length)]           ;; The similarity ratio is the proportion of similar positions in both alphabets
+    ;  print (word "Similarity Ratio = " similarity-ratio)              ;; as evaluated by our sample of size message-length
     if similarity-ratio * 100 >= random-float 101 [
-      set reproduce? true
-    ]
+      set reproduce? true                                               ;; If the similarity ratio is greater than a random percentage
+    ]                                                                   ;; we allow the individuals to reproduce together
   ]
 end
 
@@ -133,53 +157,65 @@ end
 to reproduction
   ;print "REPRODUCTION"
   let new-alphabet 0
-  let yes? false
+  let yes? false                                                       ;; What is the yes? boolean for ????? It does not seem to do much
   ask turtles with [reproduce?] [
-    ifelse 50 > random-float 101 [
-      set yes? true
+    ifelse 50 > random-float 101 [                                     ;; There is a 1/2 chance for each parent to transmit their alphabet to the new
+      set yes? true                                                    ;; turtle that is to be created
       set new-alphabet [alphabet] of interlocutor
     ] [ set new-alphabet alphabet ]
   ]
-  if yes? [
-    new-agents agents-per-reproduction true mutation new-alphabet
-  ]
+;  if yes? [
+  new-agents agents-per-reproduction true mutation new-alphabet      ;; Call the new-agents procedure with inherited? = true and have the inherited
+;  ]                                                                 ;; alphabet be mutated with the mutation procedure (line ~159)
 end
 
+;; This mutation procedure is called with an alphabet list as argument
+;; and reports the transformed, or mutated alphabet list
 to-report mutation [alphabet-test]
-  if mutation-rate > random-float 101 [
-    let pos1 random alphabet-size
+  if mutation-rate > random-float 101 [                              ;; If the mutation-rate is greater than a random value between 0 and 100
+    ;print "MUTATION"                                                ;; we allow a mutation to change the alphabet
+    let pos1 random alphabet-size                                    ;; We select two positions at random in the alphabet list
     let pos2 random alphabet-size
     ;  print (word "Before: " alphabet-test)
     ;  print (word "pos1=" pos1 "; pos2=" pos2)
     if pos1 != pos2 [
       let temp1 (item pos1 alphabet-test)
       let temp2 (item pos2 alphabet-test)
-      set alphabet-test replace-item pos1 alphabet-test temp2
-      set alphabet-test replace-item pos2 alphabet-test temp1
+      set alphabet-test replace-item pos1 alphabet-test temp2        ;; We replace the number in the first position by the number in the second position
+      set alphabet-test replace-item pos2 alphabet-test temp1        ;; We replace the number in the second position by the number in the first position
     ]
     ;  print (word "After mutation: " alphabet-test)
   ]
-  report alphabet-test
+  report alphabet-test                                               ;; Returns the mutated alphabet
 end
 
 to death
   ask turtles [
-    if lambda > (random-float 101)/ 100 [die]
-  ]
+    if lambda > (random-float 101)/ 100 [die]			     ;; If lambda is greater than a random value between 0 and 100
+  ]								     ;; Then the individual dies
 end
 
+
+;;;; This procedure ensures that all boolean tracking the status of the agents are reseted after each ticks
+to reset-boolean
+  ask turtles [
+    set communicated? false
+    set reproduce? false
+    set d 0
+  ]
+end
 ;##############################################################
 
 to monitor-turtles
   set total-turtles count turtles
 
   ask turtles [
-    foreach (range (factorial alphabet-size)) [
+    foreach (range (factorial alphabet-size)) [                      ;;  For all possible alphabets we compare the alphabet of the new agent created
       [i] ->
-      create-temporary-plot-pen (word "alpahbet " item i alphabets)
-      ;      set alphabet-type i
+      create-temporary-plot-pen (word "alphabet " item i alphabets)
+      ;      set alphabet-type i				     ;; and assign the agent to a category depending on the identity of their alphabet
       if i = alphabet-type [
-        set color scale-color red i 0 factorial alphabet-size
+        set color scale-color red i 0 factorial alphabet-size	     ;; and then plot all similar type of agents
         set-plot-pen-color color
         plot count turtles with [alphabet-type = i]
       ]
@@ -188,45 +224,57 @@ to monitor-turtles
 
 end
 
-to save-output
-  set-current-directory "/home/timothe/communication-project/communication-model-git/"
-  file-open (word "output-base-model-A2-message-mortality.txt")
+to save-output [init?]
+  ; set-current-directory "/home/timothe/communication-project/communication-model-git/"
+  ; file-open (word "output-base-model-A2-message-mortality.txt")
+  file-open output-path
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;;; Write the header of the file
-;  file-write "#"
-  if behaviorspace-run-number = 1 [
+;  if behaviorspace-run-number = 1 [
+;    file-type "# "
+;;    file-type (word "message-length , lambda, agents-per-reproduction, mutation-rate, initial-population,")
+;;    file-type (word "message-length,lambda,")
+;    foreach (range (factorial alphabet-size)) [
+;      [i] ->
+;      file-type item i alphabets
+;      file-type " "
+;      file-type (word "AI("item i alphabets")" )
+;    ]
+;    file-print "" ;; Jumps a line
+;  ]
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;;; For testing purposes:
+  if init? [
     file-type "# "
 ;    file-type (word "message-length , lambda, agents-per-reproduction, mutation-rate, initial-population,")
-    file-type (word "message-length,lambda,")
+;    file-type (word "message-length,lambda,")
     foreach (range (factorial alphabet-size)) [
       [i] ->
       file-type item i alphabets
-      file-type ","
+      file-type " "
+      file-type (word "AI("item i alphabets")" )
+      file-type " "
     ]
     file-print "" ;; Jumps a line
   ]
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;;; Writing data counts to the file
 ;  file-type (word message-length "," lambda "," agents-per-reproduction "," mutation-rate "," initial-population ",")
-  file-type (word message-length "," lambda ",")
+;  file-type (word message-length "," lambda ",")
   foreach (range (factorial alphabet-size)) [
     [i] ->
     file-type (count turtles with [alphabet-type = i])
-    file-type ","
+    file-type " "
+    file-type (aggregation-index i)
+    file-type " "
   ]
     file-print "" ;; Jumps a line
   file-close
 end
 
 
-to reset-boolean
-  ask turtles [
-    set communicated? false
-    set reproduce? false
-  ]
-end
-
 ;;;; https://stackoverflow.com/questions/33815666/generating-permutations-of-a-list-in-netlogo
+;;;;
 to-report permutations [#lst] ;Return all permutations of `lst`
   let n length #lst
   if (n = 0) [report #lst]
@@ -250,6 +298,8 @@ to combinations
   print permutations (range alphabet-size)
 end
 
+
+;;;; This procedure reports the result of the factorial of any number, a feature which is absent in NetLogo
 to-report factorial [num]
   let i range num
   let result 1
@@ -258,11 +308,77 @@ to-report factorial [num]
   ]
   report result
 end
+
+
+;##############################################################
+;;;; AGRREGATION MEASURE
+;##############################################################
+to-report aggregation-index [agent-type]
+  let ai 0
+  let total count turtles with [alphabet-type = agent-type]
+  if total != 0 [
+;    print "******************************"
+;    print (word "total agents = " total)
+    let g 0
+    ask turtles with [alphabet-type = agent-type] [
+      alphabet-neighbors agent-type             ;; Call the procedure for the current agent to count its neighbors with similar alphabet
+      set g (g + k - d)		                      ;; Counting all borders shared with same alphabet neighbors
+    ]
+;    print (word "max g = " max_g total)
+    if (max_g total) != 0 [ set ai ((g / max_g total) * 100) ]
+;    print (word "g = " g)
+;    print (word "AI = (g/max_g)*100 = " precision ai 1)
+;    print "******************************"
+    report (precision ai 1)
+  ]
+  report "NA"
+end
+
+to alphabet-neighbors [agent-type]
+  set k 0             ;; Reset the variable
+  ask patch-here [
+    ask neighbors4 [
+      set k k + count turtles-here with [alphabet-type  = agent-type]          ;; MAKE GENERAL: for all alphabet types!
+      ask turtles-here with [alphabet-type = agent-type] [set d (d + 1)]       ;; MAKE GENERAL: for all alphabet types!
+    ]
+  ]
+;  print (word "# Neighbors = " k)
+end
+
+
+;; This reporter sends as a result the size of the most compact shape, a square,
+;; for the number of units or patches here considered
+to-report max_g [tot]
+  let n 0
+  let maxg 0
+;  print "******************************"
+;  print "******************************"
+  let i 0
+  while [ (remainder sqrt(tot - i) 1) != 0 ] [		;; this iteration finds the size of the corresponding square
+;    print (word "iteration " i " successful!!")
+;    print (word "tot = " tot)
+;    print (word "tot - iteration = " (tot - i))
+;    print (word "sqrt (tot - iteration) = " sqrt (tot - i) )
+;    print (word "sqrt (tot - iteration) modulo 1 = " (remainder sqrt (tot - i) 1) )
+    set i (i + 1)
+  ]
+  set n (sqrt (tot - i))
+;  print (word "n = " n)
+  let m (tot - n ^ 2)
+;  print (word "tot - n^2 = " m)
+  (ifelse
+    m = 0 [set maxg (2 * n * (n - 1)) ]
+    m <= n [set maxg (2 * n * (n - 1) + 2 * m - 1) ]
+    m > n [set maxg (2 * n * (n - 1) + 2 * m - 2) ]
+  )
+;  print (word "max = " maxg)
+  report maxg
+end
 @#$#@#$#@
 GRAPHICS-WINDOW
-239
+226
 10
-676
+663
 448
 -1
 -1
@@ -287,9 +403,9 @@ ticks
 30.0
 
 BUTTON
-35
+22
 10
-108
+95
 43
 NIL
 setup
@@ -304,9 +420,9 @@ NIL
 1
 
 SLIDER
-31
+18
 65
-203
+190
 98
 lambda
 lambda
@@ -319,9 +435,9 @@ NIL
 HORIZONTAL
 
 BUTTON
-121
+108
 11
-184
+171
 44
 NIL
 go
@@ -336,9 +452,9 @@ NIL
 1
 
 SLIDER
-29
+16
 107
-206
+193
 140
 initial-population
 initial-population
@@ -351,9 +467,9 @@ NIL
 HORIZONTAL
 
 SLIDER
-33
+20
 152
-205
+192
 185
 alphabet-size
 alphabet-size
@@ -366,10 +482,10 @@ NIL
 HORIZONTAL
 
 MONITOR
-700
-19
-788
-60
+837
+302
+925
+343
 Total Agents
 total-turtles
 1
@@ -377,24 +493,24 @@ total-turtles
 10
 
 SLIDER
-30
+17
 191
-203
+190
 224
 message-length
 message-length
 0
 100
-1.0
+10.0
 1
 1
 NIL
 HORIZONTAL
 
 SLIDER
-24
+11
 230
-212
+199
 263
 agents-per-reproduction
 agents-per-reproduction
@@ -407,10 +523,10 @@ NIL
 HORIZONTAL
 
 PLOT
-691
-87
-1129
-366
+678
+11
+1116
+290
 plot
 NIL
 NIL
@@ -424,9 +540,9 @@ true
 PENS
 
 SLIDER
-30
+17
 271
-202
+189
 304
 mutation-rate
 mutation-rate
@@ -439,15 +555,48 @@ NIL
 HORIZONTAL
 
 SWITCH
-55
-313
-160
-346
+54
+323
+159
+356
 details
 details
 1
 1
 -1000
+
+SWITCH
+585
+473
+688
+506
+save
+save
+0
+1
+-1000
+
+INPUTBOX
+6
+462
+556
+522
+output-path
+C:\\Users\\tvanme2.AD.000.001.002.003.004.005.006.007\\Desktop\\output-test.txt
+1
+0
+String
+
+INPUTBOX
+51
+370
+155
+430
+time-limit
+100.0
+1
+0
+Number
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -791,7 +940,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.1.1
+NetLogo 6.1.0
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

@@ -30,24 +30,30 @@ to go
 end
 
 
+;;;;######################################
+;;;; The main procedure of this model
+;;;;######################################
+;; This procedure counts all occurence of a certain unit, here red patches, and calculates the aggregation index
+;; for those units. The aggregation index is calculated as showed here:
+;; This index compares the departure between the compactness of the spatial arrangment of units and the most compact possible
+;; spatial arrangement considering the number of units.
+;;;;######################################
 to aggregation-index
   let total count patches with [state?]
   if total = 0 [ stop ]
   print "******************************"
   print (word "total red patches = " total)
   let g 0
-;    The edges are counted multiple times
-;    Need to track how the count is obtained
   ask patches with [state?] [
-    set g (g + count neighbors4 with [state?] - d)
-    ask neighbors4 with [state?] [set d (d + 1)]
+    set g (g + count neighbors4 with [state?] - d)				;; Counting all borders shared with red patches neighbors
+    ask neighbors4 with [state?] [set d (d + 1)]				;; minus, d, the borders already counted in previous iterations
 ;    print (word "******************************")
 ;    print self
 ;    print (word "neighbors4 = " count neighbors4 with [state?])
 ;    print (word "d = " (- d))
 ;    print (word "neighbors4 - d = " (count neighbors4 with [state?] - d))
   ]
-;  let maxl (max_g total)
+;  let maxl (max_g total)							;; Calling the reporter max_g with number of total red patches
   print (word "max g = " max_g total)
   set ai ((g / max_g total) * 100)
   print (word "g = " g)
@@ -55,14 +61,15 @@ to aggregation-index
   print "******************************"
 end
 
-
+;; This reporter sends as a result the size of the most compact shape, a square,
+;; for the number of units or patches here considered 
 to-report max_g [tot]
   let n 0
   let maxg 0
 ;  print "******************************"
 ;  print "******************************"
   let i 0
-  while [ (remainder sqrt(tot - i) 1) != 0 ] [
+  while [ (remainder sqrt(tot - i) 1) != 0 ] [		;; this iteration finds the size of the corresponding square 
 ;    print (word "iteration " i " successful!!")
 ;    print (word "tot = " tot)
 ;    print (word "tot - iteration = " (tot - i))

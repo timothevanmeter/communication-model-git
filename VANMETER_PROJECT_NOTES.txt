@@ -1,4 +1,4 @@
-Wed 30 Oct 2019 09:43:32 AM CDT
-The NetLogo script for the calculation of the aggregation index is functioning and behaving as it should. The aggregation-index.nlogo file permits a visual verification of the measurement provided to anyone interested. This metric still needs to be included in the full communication model and this fusion then benchmarked and tested.
-Wed 30 Oct 2019 04:26:59 PM CDT
-The communication.nlogo file has now a general way of classifying each individual by the type of alphabet it is using, i.e we are able to generate all possible alphabets for a given alphabet size and assign each individual in the simulation to a specific type of alphabet.
+Wed 13 Nov 2019 01:41:53 PM CST
+The simulations for which we measured aggregation index and number of individuals are difficult to interpret and see any potential causal relationship between aggregation and an increase in population size. Therefore, I decided to measure the temporal cross-correlation between the size of the poulations and the aggregation of the iindividuals in these populations.
+Wed 13 Nov 2019 01:48:07 PM CST
+We use this tool in order to understand the precedence in the relationship between population's size and aggregation, which is non-trivial and for which a visual inspection of the time series results gave us no answers.
