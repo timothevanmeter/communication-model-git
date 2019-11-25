@@ -1,4 +1,6 @@
 Wed 13 Nov 2019 01:41:53 PM CST
-The simulations for which we measured aggregation index and number of individuals are difficult to interpret and see any potential causal relationship between aggregation and an increase in population size. Therefore, I decided to measure the temporal cross-correlation between the size of the poulations and the aggregation of the iindividuals in these populations.
+The simulations for which we measured aggregation index and number of individuals are difficult to interpret and see any potential causal relationship between aggregation and an increase in population size. Therefore, I decided to measure the temporal cross-correlation between the size of the poulations and the aggregation of the individuals in these populations.
 Wed 13 Nov 2019 01:48:07 PM CST
 We use this tool in order to understand the precedence in the relationship between population's size and aggregation, which is non-trivial and for which a visual inspection of the time series results gave us no answers.
+Fri 15 Nov 2019 05:12:56 PM CST
+I created data subsets using different temporal lags for one simulation, this is the data analysed.

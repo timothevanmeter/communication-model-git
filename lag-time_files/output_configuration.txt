@@ -1,0 +1,11 @@
+"output-path" "/home/timothe/communication-project/lag-time_files/output-lag_002"]
+["message-length" 10]
+["lambda" 0.01]
+["save" false]
+["details" false]
+["alphabet-size" 2]
+["agents-per-reproduction" 4]
+["mutation-rate" 0]
+["initial-population" 200]
+["time-limit" 1000]
+

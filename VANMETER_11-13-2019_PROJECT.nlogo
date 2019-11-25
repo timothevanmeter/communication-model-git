@@ -572,7 +572,7 @@ SWITCH
 506
 save
 save
-0
+1
 1
 -1000
 
@@ -582,7 +582,7 @@ INPUTBOX
 556
 522
 output-path
-C:\\Users\\tvanme2.AD.000.001.002.003.004.005.006.007\\Desktop\\output-test.txt
+/home/timothe/communication-project/lag-time_files/output-lag_005
 1
 0
 String
@@ -593,7 +593,7 @@ INPUTBOX
 155
 430
 time-limit
-100.0
+1000.0
 1
 0
 Number
@@ -940,7 +940,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.1.0
+NetLogo 6.1.1
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
@@ -1025,6 +1025,139 @@ NetLogo 6.1.0
     </enumeratedValueSet>
     <enumeratedValueSet variable="initial-population">
       <value value="200"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="output-lag" repetitions="1" runMetricsEveryStep="true">
+    <setup>setup</setup>
+    <go>go</go>
+    <enumeratedValueSet variable="output-path">
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_001&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_002&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_003&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_004&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_005&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_006&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_007&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_008&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_009&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_010&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_011&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_012&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_013&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_014&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_015&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_016&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_017&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_018&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_019&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_020&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_021&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_022&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_023&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_024&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_025&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_026&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_027&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_028&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_029&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_030&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_031&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_032&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_033&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_034&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_035&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_036&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_037&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_038&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_039&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_040&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_041&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_042&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_043&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_044&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_045&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_046&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_047&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_048&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_049&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_050&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_051&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_052&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_053&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_054&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_055&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_056&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_057&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_058&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_059&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_060&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_061&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_062&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_063&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_064&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_065&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_066&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_067&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_068&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_069&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_070&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_071&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_072&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_073&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_074&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_075&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_076&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_077&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_078&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_079&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_080&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_081&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_082&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_083&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_084&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_085&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_086&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_087&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_088&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_089&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_090&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_091&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_092&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_093&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_094&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_095&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_096&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_097&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_098&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_099&quot;"/>
+      <value value="&quot;/home/timothe/communication-project/lag-time_files/output-lag_100&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="message-length">
+      <value value="10"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="lambda">
+      <value value="0.01"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="save">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="details">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="alphabet-size">
+      <value value="2"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="agents-per-reproduction">
+      <value value="4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="mutation-rate">
+      <value value="0"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="initial-population">
+      <value value="200"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="time-limit">
+      <value value="1000"/>
     </enumeratedValueSet>
   </experiment>
 </experiments>

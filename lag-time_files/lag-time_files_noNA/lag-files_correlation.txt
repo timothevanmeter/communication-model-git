@@ -1,0 +1,4 @@
+# Lag_size Mean-correlation_P1 Mean-correlation_P2
+10 0.28 0.24
+20 0.29 0.25
+30 0.3 0.27
